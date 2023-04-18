@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
+  <link rel="stylesheet" href="static/css/styles.css">
 </head>
 <body>
     <nav>
@@ -12,6 +13,16 @@
         <a href="/chat">Chat</a>
     </nav>
 
-    <h1>Chat Page</h1>
+    <div id="chat-container">
+        <div id="messages">
+            <!-- Chat messages will be added here -->
+        </div>
+        <form id="message-form">
+            <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" autofocus>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="static/js/scripts.js"></script>
 </body>
 </html>

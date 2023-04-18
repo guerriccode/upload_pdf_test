@@ -1,15 +1,20 @@
 import os
-from flask import Flask, request, redirect, url_for,render_template
+from flask import Flask, request, redirect, url_for,render_template,jsonify
 import boto3
 from werkzeug.utils import secure_filename
 from io import BytesIO
 from PyPDF2 import PdfReader
 import uuid
+import openai
 
 app = Flask(__name__)
 S3_BUCKET = os.environ.get('S3_BUCKET')
 S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
 S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
+
+MY_API_KEY = os.environ['MY_API_KEY']
+openai.api_key = os.environ.get('OPENAI_API_KEY', MY_API_KEY)
+
 ALLOWED_EXTENSIONS = {'pdf'}
 
 def allowed_file(filename):
@@ -39,6 +44,22 @@ def upload():
 def chat():
     return render_template('chat.html')
   
+@app.route('/ask', methods=['POST'])
+def ask():
+  user_input = request.form['user_input']
+  response = openai.Completion.create(
+    engine="text-davinci-003",
+    prompt=user_input,
+    max_tokens=100,
+    n=1,
+    stop=None,
+    temperature=0.5,
+  )
+  chatbot_response = response.choices[0].text.strip()
+  #chatbot_response = 'Sample chatbot response'
+  return jsonify({'chatbot_response': chatbot_response})
+
+
 
 def read_pdf_content(file):
     content = ""
